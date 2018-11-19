@@ -2,6 +2,18 @@ from flask import Flask, render_template, redirect, url_for
 
 app = Flask(__name__)
 
+
+#Fake categories
+category = {'name': 'Football', 'id': '1'}
+
+categories = [{'name': 'Football', 'id': '1'}, {'name':'Baseball', 'id':'2'},{'name':'Tennis', 'id':'3'}]
+#restaurants2 = {};
+
+#Fake Category Items
+items = [ {'name':'Ball', 'description':'Addidas ball', 'price':'$80.0', 'id':'1'}, {'name':'Real Madrid uniform','description':'The first Real Madrid uniform for the 2019 season', 'price':'$160','id':'2'},{'name':'Football shoes Nike Olimpus', 'description':' The best performance for the best players','price':'$100', 'id':'3'},{'name':'Jamb Beckembauer', 'description':'made of propileny','price':'$12','id':'4'},{'name':'Nike ball ', 'description':' Soft and endurable','price':'$80', 'id':'5'} ]
+item =  {'name':'Ball', 'description':'Addidas ball', 'price':'$80.0', 'id':'1'}
+
+
 @app.route('/')
 @app.route('/catalog')
 def showCategories():
