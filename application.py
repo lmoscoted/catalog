@@ -29,7 +29,7 @@ def showItems(category_name):
 
 
 @app.route('/catalog/<string:category_name>/new')
-def newItem(category_name, item_name):
+def newItem(category_name):
     return "Item  added!"
 
 @app.route('/catalog/<string:category_name>/<string:item_name>/edit')
