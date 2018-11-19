@@ -13,35 +13,35 @@ def newCategory():
     return "Creating a new Category!"
 
 
-@app.route('/catalog/<str:category_name>/edit')
+@app.route('/catalog/<string:category_name>/edit')
 def editCategory(category_name):
     return "Editing a Category!"
 
 
-@app.route('/catalog/<str:category_name>/delete')
+@app.route('/catalog/<string:category_name>/delete')
 def deleteCategory(category_name):
     return "Deleting Category!"
 
 
-@app.route('/catalog/<str:category_name>/items')
+@app.route('/catalog/<string:category_name>/items')
 def showItems(category_name):
     return "Items for the category %s" % category_name
 
 
-@app.route('/catalog/<str:category_name>/new')
+@app.route('/catalog/<string:category_name>/new')
 def newItem(category_name, item_name):
     return "Item  added!"
 
-@app.route('/catalog/<str:category_name>/<str:item_name>/edit')
+@app.route('/catalog/<string:category_name>/<string:item_name>/edit')
 def editItem(category_name, item_name):
     return " Editing %s from the %s categroy" % (item_name, category_name)
 
 
-@app.route('/catalog/<str:category_name>/<str:item_name>/delete')
+@app.route('/catalog/<string:category_name>/<string:item_name>/delete')
 def deleteItem(category_name, item_name):
     return " Deleting %s from the %s categroy" % (item_name, category_name)
 
-@app.route('/catalog/<str:category_name>/<str:item_name>')
+@app.route('/catalog/<string:category_name>/<string:item_name>')
 def infoItem(category_name, item_name):
     return " This is a description of %S" % (item_name)
 
