@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template, redirect, url_for
 
 app = Flask(__name__)
 
@@ -43,7 +43,7 @@ def deleteItem(category_name, item_name):
 
 @app.route('/catalog/<string:category_name>/<string:item_name>')
 def infoItem(category_name, item_name):
-    return " This is a description of %S" % (item_name)
+    return " This is a description of %s" % (item_name)
 
 
 
