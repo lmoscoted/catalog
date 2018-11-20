@@ -42,11 +42,14 @@
 		<div class="col-md-1"></div>
 	</div>
 	{% for category in categories %}
-		<a href = "{{url_for('showCategories')}}">
+		<a href = "{{url_for('showItems',category_name=category.name)}}">
 			<div class="row">
 				<div class="col-md-1"></div>
 					<div class="col-md-10 restaurant-list">
 						<h3>{{category.name}}</h3>
+						<a href = '{{url_for('editCategory', category_name=category.name)}}'> Edit  </a>
+						<a href = '{{url_for('deleteCategory', category_name=category.name)}}'> Delete  </a>
+
 					</div>
 				<div class="col-md-1"></div>
 			</div>

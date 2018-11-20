@@ -1,0 +1,74 @@
+<html>
+<head>
+	
+	</head><link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+	<body>
+
+	<div class='pane'>
+		<div class='header'>
+		
+		
+		<h1>{{ category_name }}</h1>
+	</div>	
+
+	
+
+	<a href = '{{url_for('newItem', category_name=category_name)}}''>Create New Item</a>
+
+	<!-- <div class= 'flash'>
+	  {% with messages = get_flashed_messages() %}
+      {% if messages %}
+          
+        <ul>
+        {% for message in messages %}
+            <li> <strong> {{ message }} </strong> </li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
+		
+	</div> -->
+
+
+    {% if items %}
+    {% for i in items %}
+    <div class='nameAndPrice'>
+    	<span class=name><p>{{i['name']}}</p></span>
+
+	    <span class=price><p>{{i['price']}} </p></span>
+    </div>
+
+
+
+    <div class='description'>
+		<p>{{i['description']}}</p>
+
+	</div>
+		
+	
+
+    <div class='editdeletepane'>
+	<a href='{{url_for('editItem', category_name=category_name, item_name=i['name'] )}}' > Edit</a>
+
+
+	<a href='{{url_for('deleteItem', category_name=category_name, item_name=i['name'] )}}' > Delete</a>
+
+    </div>
+
+		{% endfor %}
+
+    {% else %}
+    </br>
+    </br>
+      you currently have not  items yet
+
+    {% endif %}
+		
+</div>
+</div>
+
+	</body>
+
+
+
+</html>
