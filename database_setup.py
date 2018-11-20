@@ -64,10 +64,7 @@ class Item(Base):
     #      'price' : self.price,
     #      'course' : self.course
     #     }
-        
-   
     
- 
 
 engine = create_engine('sqlite:///catalogitem.db')
 Base.metadata.create_all(engine)

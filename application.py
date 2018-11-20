@@ -1,4 +1,8 @@
 from flask import Flask, render_template, redirect, url_for
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import StaticPool
+from database_setup import Base, Category, Item, User
 
 app = Flask(__name__)
 
