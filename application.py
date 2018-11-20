@@ -21,19 +21,19 @@ def showCategories():
 
 
 
-@app.route('/catalog/new')
+@app.route('/catalog/new', methods=['GET', 'POST'])
 def newCategory():
     return render_template('newcategory.html')
 
 
 
 @app.route('/catalog/<string:category_name>/edit')
-def editCategory(category_name):
+def editCategory(category_name, methods=['GET', 'POST']):
     return render_template('editcategory.html', category_name=category['name'])
 
 
 @app.route('/catalog/<string:category_name>/delete')
-def deleteCategory(category_name):
+def deleteCategory(category_name, methods=['GET', 'POST']):
     return render_template('deletecategory.html', category_name=category['name'])
 
 
@@ -42,16 +42,16 @@ def showItems(category_name):
     return render_template('items.html', category_name=category['name'], items=items)
 
 
-@app.route('/catalog/<string:category_name>/new')
+@app.route('/catalog/<string:category_name>/new', methods=['GET', 'POST'])
 def newItem(category_name):
     return render_template('newitem.html', category_name=category['name'], categories=categories)
 
-@app.route('/catalog/<string:category_name>/<string:item_name>/edit')
+@app.route('/catalog/<string:category_name>/<string:item_name>/edit', methods=['GET', 'POST'])
 def editItem(category_name, item_name):
     return render_template('edititem.html', category_name=category['name'], categories=categories, item=item)
 
 
-@app.route('/catalog/<string:category_name>/<string:item_name>/delete')
+@app.route('/catalog/<string:category_name>/<string:item_name>/delete', methods=['GET', 'POST'])
 def deleteItem(category_name, item_name):
     return render_template('deleteitem.html', category_name=category['name'], categories=categories, item=item)
 
