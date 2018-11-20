@@ -1,7 +1,12 @@
-<html>
+<!-- <html>
 <head>
 	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}"/>
-</head>
+</head> -->
+
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+
 
 <h1> New Category </h1>
 
@@ -19,4 +24,4 @@
 </form>	 
 </body>
 </div>
-</html>
+{% endblock%}
