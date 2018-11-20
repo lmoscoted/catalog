@@ -15,14 +15,16 @@ item =  {'name':'Ball', 'description':'Addidas ball', 'price':'$80.0', 'id':'1'}
 
 
 @app.route('/')
-@app.route('/catalog')
+@app.route('/catalog', methods=['GET', 'POST'])
 def showCategories():
-    return "These are all categories!"
+    return render_template('categories.html', categories=categories)
+
 
 
 @app.route('/catalog/new')
 def newCategory():
-    return "Creating a new Category!"
+    return render_template('newcategory.html')
+
 
 
 @app.route('/catalog/<string:category_name>/edit')
