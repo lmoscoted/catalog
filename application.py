@@ -6,7 +6,7 @@ from database_setup import Base, Category, Item, User
 
 app = Flask(__name__)
 
-engine = create_engine('sqlite:///catalogitem.db', connect_args={'check_same_thread':False},poolclass=StaticPool) # Which DB python will communicate with
+engine = create_engine('sqlite:///catalogitems.db', connect_args={'check_same_thread':False},poolclass=StaticPool) # Which DB python will communicate with
 Base.metadata.bind = engine # Makes connection between class and tables
 
 DBSession = sessionmaker(bind=engine) # Link of communication between our code execution

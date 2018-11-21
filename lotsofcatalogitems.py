@@ -388,9 +388,9 @@ item1 = Item(user_id=1, name="Lemon Curd Ice Cream Sandwich",
 
 session.add(item1) 
 session.commit()
-a = "lorem "
+
 
 print "added Category items!"
 
-lorem                
+               
 

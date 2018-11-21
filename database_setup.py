@@ -18,8 +18,8 @@ class User(Base):
             """docstring for ClassNam"""
             __tablename__ = 'user'
 
-            name = Column(String(250), nullable = False)
             id = Column(Integer, primary_key=True)
+            name = Column(String(250), nullable = False)
             email = Column(String(250), nullable=False)
             picture= Column(String(250))
 
@@ -79,5 +79,5 @@ class Item(Base):
     #     }
     
 
-engine = create_engine('sqlite:///catalogitem.db')
+engine = create_engine('sqlite:///catalogitems.db')
 Base.metadata.create_all(engine)
