@@ -6,15 +6,15 @@
 
 <h1> Edit Category Item </h1>
 
-<form action='{{url_for('editItem', category_name=category_name, item_name=item['name'])}}' method = 'post'>
+<form action='{{url_for('editItem', category_name=category_name, item_name=item.name)}}' method = 'post'>
 
 	<p> Name: </p>
 	 <input type = 'text' size= '30' name= 'name' placeholder
-	 = '{{item['name']}}'>
+	 = '{{item.name}}'>
 
 	<p> Description: </p>
 	 <input type = 'text' size= '30' name= 'description' placeholder
-	 = '{{item['description']}}'> 
+	 = '{{item.description}}'> 
 
 	 
 </br>
@@ -24,13 +24,13 @@
 	 
     {% if categories %}
      {% set cont=0 %}
-     <select name="Category">
+     <select name="category">
      {% for category in categories %}
 
         <!-- {% set cont= cont +1 %} -->
         <!-- cont= {{loop.index0 + 1}} -->
 
-    <option value="{{loop.index0 + 1}}">{{category['name']}}</option>  <!--is Value int or str? -->
+    <option value="{{loop.index0 }}">{{category.name}}</option>  <!--is Value int or str? -->
    
      {% endfor %}
      </select>
@@ -44,7 +44,13 @@
 
 <p> Price: </p>
 	 <input type = 'text' size= '30' name= 'price' placeholder
-	 = '{{item['price']}}'>
+	 = '{{item.price}}'>
+</br>
+</br>
+
+<p> Picture: </p>
+	 <input type = 'text' size= '30' name= 'picture' placeholder
+	 = "Item's picture">
 </br>
 </br>
 	 
