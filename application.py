@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, request
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
@@ -43,14 +43,27 @@ def newCategory():
 
 
 
-@app.route('/catalog/<string:category_name>/edit')
-def editCategory(category_name, methods=['GET', 'POST']):
+@app.route('/catalog/<string:category_name>/edit', methods=['GET', 'POST'])
+def editCategory(category_name):
     return render_template('editcategory.html', category_name=category['name'])
 
 
-@app.route('/catalog/<string:category_name>/delete')
-def deleteCategory(category_name, methods=['GET', 'POST']):
-    return render_template('deletecategory.html', category_name=category['name'])
+@app.route('/catalog/<string:category_name>/delete', methods=['GET', 'POST'])
+def deleteCategory(category_name):
+    
+    category_dele = session.query(Category).filter_by(name=category_name).all()
+    if request.method == 'POST':
+       
+        session.delete(category_dele[0])
+        session.commit()
+        #flash('Restaurant Successfully Deleted')
+        return redirect(url_for('showCategories'))
+    else:
+        return render_template('deletecategory.html', category_name=category_dele[0].name)
+
+
+
+    
 
 
 @app.route('/catalog/<string:category_name>/items')
