@@ -45,21 +45,33 @@ def newCategory():
 
 @app.route('/catalog/<string:category_name>/edit', methods=['GET', 'POST'])
 def editCategory(category_name):
-    return render_template('editcategory.html', category_name=category['name'])
+
+    category_edit = session.query(Category).filter_by(name=category_name).one()
+    #category_edit.name = request.form['name']
+    if request.method == 'POST':
+        if request.form['name']:
+            category_edit.name = request.form['name']
+            session.add(category_edit)
+            session.commit()
+        #flash('Restaurant Successfully Edited')
+        return redirect(url_for('showCategories'))
+    else:
+        return render_template('editcategory.html', category_name=category_edit.name)
+    
 
 
 @app.route('/catalog/<string:category_name>/delete', methods=['GET', 'POST'])
 def deleteCategory(category_name):
-    
-    category_dele = session.query(Category).filter_by(name=category_name).all()
+
+    category_dele = session.query(Category).filter_by(name=category_name).one()
     if request.method == 'POST':
        
-        session.delete(category_dele[0])
+        session.delete(category_dele)
         session.commit()
         #flash('Restaurant Successfully Deleted')
         return redirect(url_for('showCategories'))
     else:
-        return render_template('deletecategory.html', category_name=category_dele[0].name)
+        return render_template('deletecategory.html', category_name=category_dele.name)
 
 
 
