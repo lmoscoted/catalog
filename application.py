@@ -6,21 +6,32 @@ from database_setup import Base, Category, Item, User
 
 app = Flask(__name__)
 
+engine = create_engine('sqlite:///catalogitem.db', connect_args={'check_same_thread':False},poolclass=StaticPool) # Which DB python will communicate with
+Base.metadata.bind = engine # Makes connection between class and tables
 
-#Fake categories
-category = {'name': 'Football', 'id': '1'}
+DBSession = sessionmaker(bind=engine) # Link of communication between our code execution
+                                      # and the created engine
+session = DBSession() # interefaz that allow to create DB operations
 
-categories = [{'name': 'Football', 'id': '1'}, {'name':'Baseball', 'id':'2'},{'name':'Tennis', 'id':'3'}]
-#categories2 ={};
 
-#Fake Category Items
-items = [ {'name':'Ball', 'description':'Addidas ball', 'price':'$80.0', 'id':'1'}, {'name':'Real Madrid uniform','description':'The first Real Madrid uniform for the 2019 season', 'price':'$160','id':'2'},{'name':'Football shoes Nike Olimpus', 'description':' The best performance for the best players','price':'$100', 'id':'3'},{'name':'Jamb Beckembauer', 'description':'made of propileny','price':'$12','id':'4'},{'name':'Nike ball ', 'description':' Soft and endurable','price':'$80', 'id':'5'} ]
-item =  {'name':'Ball', 'description':'Addidas ball', 'price':'$80.0', 'id':'1'}
-items2 = []
+
+# #Fake categories
+# category = {'name': 'Football', 'id': '1'}
+
+# categories = [{'name': 'Football', 'id': '1'}, {'name':'Baseball', 'id':'2'},{'name':'Tennis', 'id':'3'}]
+# #categories2 ={};
+
+# #Fake Category Items
+# items = [ {'name':'Ball', 'description':'Addidas ball', 'price':'$80.0', 'id':'1'}, {'name':'Real Madrid uniform','description':'The first Real Madrid uniform for the 2019 season', 'price':'$160','id':'2'},{'name':'Football shoes Nike Olimpus', 'description':' The best performance for the best players','price':'$100', 'id':'3'},{'name':'Jamb Beckembauer', 'description':'made of propileny','price':'$12','id':'4'},{'name':'Nike ball ', 'description':' Soft and endurable','price':'$80', 'id':'5'} ]
+# item =  {'name':'Ball', 'description':'Addidas ball', 'price':'$80.0', 'id':'1'}
+# items2 = []
+
+
 
 @app.route('/')
 @app.route('/catalog', methods=['GET', 'POST'])
 def showCategories():
+	categories = session.query(Category).order_by(Category.name)
     return render_template('categories.html', categories=categories)
 
 

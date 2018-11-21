@@ -48,6 +48,7 @@ class Item(Base):
     price = Column(String(8))
     picture = Column(String(250), nullable = True)
     category_id = Column(Integer,ForeignKey('category.id'))
+    date_creation = Column(Date, nullable=False)
     category = relationship(Category)
     user_id = Column(Integer,ForeignKey('user.id'))
     user = relationship(User)
