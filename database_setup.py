@@ -1,9 +1,15 @@
 import os
 import sys
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
+from sqlalchemy.sql import func
+#import DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
+import datetime
+#----------------------------------
+# We must install DateTime Package
+#---------------------------------
  
 Base = declarative_base()
 
@@ -48,11 +54,17 @@ class Item(Base):
     price = Column(String(8))
     picture = Column(String(250), nullable = True)
     category_id = Column(Integer,ForeignKey('category.id'))
-    date_creation = Column(Date, nullable=False)
+    #date_creation = Column(DateTime(timezone=True), server_default=func.now())
+    #date_creation = Column(datetime.datetime, default=datetime.datetime.today())
+    #date_creation = Column(datetime.datetime, default=func.now())
+    #date_creation = Column(DateTime(), default=datetime.datetime.utcnow())
+    
+    date_creation = Column(DateTime(timezone=True), server_default=func.now())
+    date_update = Column(DateTime(timezone=True), server_default=func.now())
     category = relationship(Category)
     user_id = Column(Integer,ForeignKey('user.id'))
     user = relationship(User)
-
+#Column(db.DateTime, default=datetime.datetime.now)
     
 
     # @property

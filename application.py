@@ -31,9 +31,10 @@ session = DBSession() # interefaz that allow to create DB operations
 @app.route('/')
 @app.route('/catalog', methods=['GET', 'POST'])
 def showCategories():
-	categories = session.query(Category).order_by(Category.name)
+    
+    categories = session.query(Category).order_by(Category.name)
+    
     return render_template('categories.html', categories=categories)
-
 
 
 @app.route('/catalog/new', methods=['GET', 'POST'])
