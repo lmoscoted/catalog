@@ -103,7 +103,7 @@ def showItems(category_name):
 @app.route('/catalog/<string:category_name>/new', methods=['GET', 'POST'])
 def newItem(category_name):
 
-    category = session.query(Category).filter_by(name=category.name).one()
+    category = session.query(Category).filter_by(name=category_name).one()
 
     if request.method == 'POST':
         item_new = Item(name=request.form['name'], description=request.form['description'], price=request.form['price'], category_id=category.id, user_id=2) # Add user info login_session['email']
