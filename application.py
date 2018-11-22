@@ -3,6 +3,7 @@ from sqlalchemy import create_engine, DateTime
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 from database_setup import Base, Category, Item, User
+from sqlalchemy.sql import func
 import datetime
 
 from flask import session as login_session
@@ -126,24 +127,24 @@ def editItem(category_name, item_name):
     if request.method == 'POST':
         if request.form['name']:
             item_edited.name = request.form['name']
-            item_edited.date_update = datetime.datetime.utcnow()
+            item_edited.date_update = func.now()
         #print("This is name")    
         if request.form['description']:
             item_edited.description = request.form['description']
-            item_edited.date_update = datetime.datetime.utcnow()
+            item_edited.date_update = func.now()
         #print("This is description")
         if request.form['price']:
             item_edited.price = request.form['price']
-            item_edited.date_update = datetime.datetime.utcnow()
+            item_edited.date_update = func.now()
         #print("This is price")    
         if request.form['picture']:
             item_edited.picture = request.form['picture']
-            item_edited.date_update = datetime.datetime.utcnow()
+            item_edited.date_update = func.now()
         #print("This is picture")
        # print(type(request.form['category']))
         if category_name != categories[int(request.form['category'])]:
             item_edited.category = categories[int(request.form['category'])]
-            item_edited.date_update = datetime.datetime.utcnow()  
+            item_edited.date_update = func.now()  
         # print(type(request.form['category']))
         # print("This is category")       
         session.add(item_edited)  
