@@ -208,11 +208,17 @@ def disconnect():
 @app.route('/catalog/JSON')
 def categoriesJSON():
     category_list = session.query(Category).all()
+
     if not category_list:
         error = [{'Error Message': 'There are not available categories '}]
         return jsonify({'Categories': error})
 
-    return jsonify(Categories=[i.serialize for i in category_list])
+
+        print([items_cat ])
+    
+   
+    return jsonify(Categories=[[i.serialize for i in category_list ] ])
+
 
 @app.route('/catalog/<string:category_name>/JSON')
 def categoryJSON(category_name):
@@ -222,7 +228,7 @@ def categoryJSON(category_name):
         error = [{'Error Message': 'There are not available items '}]
         return jsonify({'Items': error})
 
-    return jsonify(Items=[i.serialize for i in items])
+    return jsonify(Items=[i.serialize for i in items])  # Agregar todo el catalogo en un archivo JSON
 
 @app.route('/catalog/<string:category_name>/<string:item_name>/JSON')
 def categoryItemsJSON(category_name, item_name):
