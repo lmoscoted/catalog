@@ -6,9 +6,21 @@ from database_setup import Base, Category, Item, User
 from sqlalchemy.sql import func
 import datetime
 
+from oauth2client.client import flow_from_clientsecrets
+from oauth2client.client import *
+from oauth2client.client import FlowExchangeError
+import httplib2
+import json
+import requests
+from flask import make_response
 from flask import session as login_session
+import random, string
 
 app = Flask(__name__)
+
+# Google Client ID 
+CLIENT_ID = json.loads(
+    open('client_secrets.json', 'r').read())['web']['client_id']
 
 engine = create_engine('sqlite:///catalogitems.db', connect_args={'check_same_thread':False},poolclass=StaticPool) # Which DB python will communicate with
 Base.metadata.bind = engine # Makes connection between class and tables
@@ -31,7 +43,111 @@ session = DBSession() # interefaz that allow to create DB operations
 # items2 = []
 
 
+# Login page with Anti forgery Atack.
+@app.route('/login')
+def showLogin():
+    state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
+    login_session['state'] = state
+    return render_template('login.html', STATE=state)
 
+
+
+#handle the code sent back from the callback method   
+@app.route('/gconnect', methods=['POST'])
+def gconnect():
+    print("BEGIN HERE")
+    if request.args.get('state') != login_session['state']:
+        response = make_response(json.dumps('Invalid state parameter'),401)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    code = request.data  
+    print("SECOND TRACE")
+    try:
+    # Upgrade the authorized code into a credentials object  
+        print("THIRD TRACE")
+        oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
+        print("FOUR TRACE")
+        oauth_flow.redirect_uri = 'postmessage'
+        print("FIFTH TRACE")
+        credentials = oauth_flow.step2_exchange(code)
+        print("SIXTH TRACE")
+
+    except FlowExchangeError:
+        print("SEVENTH TRACE")
+        response = make_response(json.dumps('Failed to upgrade the authorization code. '), 401)
+        print("EIGTH TRACE")
+        response.headers['Content-Type'] = 'application/json'
+        print("NINE TRACE")
+        print('Failed to upgrade the authorization code. ')
+        return response
+    # Check that the access token is valid.
+    print("THIRD TRACE")
+    access_token = credentials.access_token
+    url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s' % access_token)
+    h = httplib2.Http()
+    result = json.loads(h.request(url, 'GET')[1])   
+    # If there was an error in the access token info, abort.
+    if result.get('error') is not None:
+        response = make_response(json.dumps(result.get('error')), 50)
+        response.headers['Content-Type'] = 'application/json'
+    # Verify that the access token is used for intended use
+    gplus_id = credentials.id_token['sub']
+    if result['user_id'] != gplus_id:
+        response = make_response(json.dumps("Token's user ID doesn't match given user ID."), 401)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    # Verify that the access token is valid for this app.
+    if result['issued_to'] != CLIENT_ID:
+        response = make_response(json.dumps("Token's client ID does not match app's ."), 401)
+        print("Token's client ID does not match app's.")
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    # Check to see if the user is already logged in
+    stored_credentials = login_session.get('credentials')
+    stored_gplus_id = login_session.get('gplus_id')
+    if stored_credentials is not None and gplus_id == stored_gplus_id:
+        response = make_response(json.dumps("Current user is already connected. "), 200)
+        response.headers['Content-Type'] = 'application/json'
+    
+    # Store the access token in the session for later use.
+    login_session['provider'] = 'google'
+    login_session['credentials'] = credentials
+    login_session['gplus_id'] = gplus_id
+
+
+    #Get user info
+    userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
+    params = {'access_token': credentials.access_token, 'alt': 'json'}
+    answer = requests.get(userinfo_url, params=params)
+    data = json.loads(answer.text)
+
+    login_session['username'] = data["name"]
+    login_session['picture'] = data["picture"]
+    login_session['email'] = data['email']
+
+    # See if user exists, if it does not make a new one
+    
+    #user_db = session.query(User).filter_by(email=).one()
+
+    if getUserID(login_session['email']) == None:
+        user_id = createUser(login_session)
+        login_session['user_id'] = user_id
+
+    login_session['user_id'] = getUserID(login_session['email'])
+
+
+
+
+    output = ''
+    output += '<h1> Welcome, '
+    output += login_session['username']
+
+    output += '!<h1>'
+    output += '<img src="'
+    output += login_session['picture']
+    output += ' " style = width: 300px; height: 300px; border-radius: 150px; -webkit-border-radius: 150px;-moz-border-radius: 150px; ">'
+    flash("you are now logged in as %s "%login_session['username'])
+    return  output
 
 
 
