@@ -151,6 +151,64 @@ def gconnect():
     return  output
 
 
+# DISCONNECT - Revoke a current user's token and reset their
+#login_session
+@app.route('/gdisconnect')
+def gdisconnect():
+    #Only disconnect a connected user.
+    credentials = login_session.get('credentials')
+    if credentials is None:
+        response = make_response(json.dumps('Current user not connected.'), 401)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    #Execute HTTP GET request to revoke current token    
+    # print 'In gdisconnect access token is %s', access_token
+    # print 'User name is: '
+    # print login_session['username']
+    access_token = credentials.access_token
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
+    h = httplib2.Http()
+    result = h.request(url, 'GET')[0]
+    
+    if result['status'] == '200':
+    #     #Reset the user's session
+    #     del login_session['credentials']
+    #     del login_session['gplus_id']
+    #     del login_session['username']
+    #     del login_session['email']
+    #     del login_session['picture']
+        response = make_response(json.dumps('Successfully disconnected.'), 200)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    else:
+       #For whatever reason, the given token was invalid
+        response = make_response(json.dumps('Failed to revoke token for given user.', 400))
+        response.headers['Content-Type'] = 'application/json'
+        return response
+
+# DISCONNECT function for any provider
+@app.route('/disconnect')
+def disconnect():
+
+    if 'provider' in login_session:
+        if login_session['provider'] == 'google':
+            gdisconnect()
+            del login_session['gplus_id']
+            del login_session['credentials']
+        if login_session['provider'] == 'facebook':
+            fbdisconnect()
+            del login_session['facebook']
+    
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
+        del login_session['user_id']
+        del login_session['provider']
+        flash("You have Successfully been logged out. ")
+        return redirect(url_for('showCategories'))
+    else:
+        flash("You are not logged in to begin with!")
+        redirect(url_for('showCategories'))
 
 @app.route('/')
 @app.route('/catalog', methods=['GET', 'POST'])
