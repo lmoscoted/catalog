@@ -32,6 +32,9 @@ session = DBSession() # interefaz that allow to create DB operations
 
 
 
+
+
+
 @app.route('/')
 @app.route('/catalog', methods=['GET', 'POST'])
 def showCategories():
@@ -39,6 +42,7 @@ def showCategories():
     categories = session.query(Category).order_by(Category.name)
     
     return render_template('categories.html', categories=categories)
+    #return render_template('publiccategories.html', categories=categories)
 
 
 @app.route('/catalog/new', methods=['GET', 'POST'])
@@ -100,6 +104,7 @@ def showItems(category_name):
 
 
     return render_template('items.html', category_name=category.name, items=items)
+    #return render_template('publicitems.html', category_name=category.name, items=items)
 
 
 @app.route('/catalog/<string:category_name>/new', methods=['GET', 'POST'])
@@ -189,7 +194,8 @@ def infoItem(category_name, item_name):
                 item = i
     else:
         item = items
-    return render_template('item.html', category_name=category_name, item=item)
+    #return render_template('item.html', category_name=category_name, item=item)
+    return render_template('publicitem.html', category_name=category_name, item=item)
 
 # Methods for getting user information
 def getUserID(email):
