@@ -121,9 +121,10 @@ def newItem(category_name):
 def editItem(category_name, item_name):
 
     categories = session.query(Category).order_by(Category.name)
+    #print((categories))
     category = session.query(Category).filter_by(name=category_name).one()
     item_edited = session.query(Item).filter((Item.name==item_name) & (Item.category_id==category.id)).one()
-
+    
     if request.method == 'POST':
         if request.form['name']:
             item_edited.name = request.form['name']
