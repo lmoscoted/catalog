@@ -215,13 +215,20 @@ def disconnect():
 def showCategories():
     
     categories = session.query(Category).order_by(Category.name)
-    
-    return render_template('categories.html', categories=categories)
+    if 'username' not in login_session:
+        return render_template('publiccategories.html', categories=categories)
+    else:
+        return render_template('categories.html', categories=categories)
+        
+
     #return render_template('publiccategories.html', categories=categories)
 
 
 @app.route('/catalog/new', methods=['GET', 'POST'])
 def newCategory():
+
+    if 'username' not in login_session:
+        return redirect('/login')
 
     if request.method == 'POST':
         category_new = Category(name=request.form['name'], user_id= 2) #login_session['user_id']
@@ -240,7 +247,12 @@ def newCategory():
 @app.route('/catalog/<string:category_name>/edit', methods=['GET', 'POST'])
 def editCategory(category_name):
 
+    if 'username' not in login_session:
+        return redirect('/login')
+
     category_edit = session.query(Category).filter_by(name=category_name).one()
+
+
     #category_edit.name = request.form['name']
     if request.method == 'POST':
         if request.form['name']:
@@ -256,6 +268,9 @@ def editCategory(category_name):
 
 @app.route('/catalog/<string:category_name>/delete', methods=['GET', 'POST'])
 def deleteCategory(category_name):
+
+    if 'username' not in login_session:
+        return redirect('/login')
 
     category_dele = session.query(Category).filter_by(name=category_name).one()
     if request.method == 'POST':
@@ -276,14 +291,19 @@ def deleteCategory(category_name):
 def showItems(category_name):
     category = session.query(Category).filter_by(name=category_name).one()
     items = session.query(Item).filter_by(category_id=category.id).all()
+    if 'username' not in login_session:
+        return render_template('publicitems.html', category_name=category.name, items=items)
 
-
-    return render_template('items.html', category_name=category.name, items=items)
+    else:    
+        return render_template('items.html', category_name=category.name, items=items)
     #return render_template('publicitems.html', category_name=category.name, items=items)
 
 
 @app.route('/catalog/<string:category_name>/new', methods=['GET', 'POST'])
 def newItem(category_name):
+
+    if 'username' not in login_session:
+        return redirect('/login')
 
     category = session.query(Category).filter_by(name=category_name).one()
 
@@ -299,6 +319,9 @@ def newItem(category_name):
 
 @app.route('/catalog/<string:category_name>/<string:item_name>/edit', methods=['GET', 'POST'])
 def editItem(category_name, item_name):
+
+    if 'username' not in login_session:
+        return redirect('/login')
 
     categories = session.query(Category).order_by(Category.name)
     #print((categories))
@@ -346,6 +369,10 @@ def editItem(category_name, item_name):
 @app.route('/catalog/<string:category_name>/<string:item_name>/delete', methods=['GET', 'POST'])
 def deleteItem(category_name, item_name):
 
+    if 'username' not in login_session:
+        return redirect('/login')
+
+
     category = session.query(Category).filter_by(name=category_name).one()
     item_deleted = session.query(Item).filter((Item.name==item_name) & (Item.category_id==category.id)).one()
     if request.method == 'POST':
@@ -360,17 +387,27 @@ def deleteItem(category_name, item_name):
 @app.route('/catalog/<string:category_name>/<string:item_name>')
 def infoItem(category_name, item_name):
     category = session.query(Category).filter_by(name=category_name).one()
-    items = session.query(Item).filter_by(name=item_name).all()
+    item = session.query(Item).filter((Item.name==item_name) & (Item.category_id == category.id)).one()
+
+    if 'username' not in login_session:
+        return render_template('publicitem.html', category_name=category_name, item=item)
+
+
     #print("This item is repeated %s times!"%len(items))
     # If there are more than one item name in another category
-    if len(items) > 1:
-        for i in items:
-            if category.id == i.category_id:
-                item = i
-    else:
-        item = items
+    # if len(items) > 1:
+    #     for i in items:
+    #         if category.id == i.category_id:
+    #             item = i
+    # else:
+    #     item = items
     #return render_template('item.html', category_name=category_name, item=item)
-    return render_template('publicitem.html', category_name=category_name, item=item)
+    
+
+    else: 
+        return render_template('item.html', category_name=category_name, item=item)
+
+
 
 # Methods for getting user information
 def getUserID(email):
