@@ -273,9 +273,13 @@ def deleteCategory(category_name):
         return redirect('/login')
 
     category_dele = session.query(Category).filter_by(name=category_name).one()
+    items_dele = session.query(Item).filter_by(category_id=category_dele.id).all()
     if request.method == 'POST':
        
         session.delete(category_dele)
+        
+        for i in items_dele:
+            session.delete(i)
         session.commit()
         #flash('Restaurant Successfully Deleted')
         return redirect(url_for('showCategories'))
