@@ -1,8 +1,9 @@
 from flask import Flask, render_template, redirect, url_for, request
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, DateTime
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 from database_setup import Base, Category, Item, User
+import datetime
 
 from flask import session as login_session
 
@@ -125,21 +126,26 @@ def editItem(category_name, item_name):
     if request.method == 'POST':
         if request.form['name']:
             item_edited.name = request.form['name']
-        print("This is name")    
+            item_edited.date_update = datetime.datetime.utcnow()
+        #print("This is name")    
         if request.form['description']:
             item_edited.description = request.form['description']
-        print("This is description")
+            item_edited.date_update = datetime.datetime.utcnow()
+        #print("This is description")
         if request.form['price']:
             item_edited.price = request.form['price']
-        print("This is price")    
+            item_edited.date_update = datetime.datetime.utcnow()
+        #print("This is price")    
         if request.form['picture']:
             item_edited.picture = request.form['picture']
-        print("This is picture")
-        print(type(request.form['category']))
+            item_edited.date_update = datetime.datetime.utcnow()
+        #print("This is picture")
+       # print(type(request.form['category']))
         if category_name != categories[int(request.form['category'])]:
-            item_edited.category = categories[int(request.form['category'])]  
-        print(type(request.form['category']))
-        print("This is category")       
+            item_edited.category = categories[int(request.form['category'])]
+            item_edited.date_update = datetime.datetime.utcnow()  
+        # print(type(request.form['category']))
+        # print("This is category")       
         session.add(item_edited)  
         session.commit()  
         return redirect(url_for('showItems',category_name=category.name))   
