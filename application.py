@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request, flash
+from flask import Flask, render_template, redirect, url_for, request, flash, jsonify
 from sqlalchemy import create_engine, DateTime
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
@@ -56,33 +56,24 @@ def showLogin():
 #handle the code sent back from the callback method   
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
-    print("BEGIN HERE")
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter'),401)
         response.headers['Content-Type'] = 'application/json'
         return response
     code = request.data  
-    print("SECOND TRACE")
+
     try:
     # Upgrade the authorized code into a credentials object  
-        print("THIRD TRACE")
         oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
-        print("FOUR TRACE")
         oauth_flow.redirect_uri = 'postmessage'
-        print("FIFTH TRACE")
         credentials = oauth_flow.step2_exchange(code)
-        print("SIXTH TRACE")
-
+    
     except FlowExchangeError:
-        print("SEVENTH TRACE")
         response = make_response(json.dumps('Failed to upgrade the authorization code. '), 401)
-        print("EIGTH TRACE")
         response.headers['Content-Type'] = 'application/json'
-        print("NINE TRACE")
         print('Failed to upgrade the authorization code. ')
         return response
     # Check that the access token is valid.
-    print("THIRD TRACE")
     access_token = credentials.access_token
     url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s' % access_token)
     h = httplib2.Http()
@@ -210,6 +201,39 @@ def disconnect():
         flash("You are not logged in to begin with!")
         redirect(url_for('showCategories'))
 
+
+
+
+#Making an API Endpoint (GET Request)
+@app.route('/catalog/JSON')
+def categoriesJSON():
+    category_list = session.query(Category).all()
+    if not category_list:
+        error = [{'Error Message': 'There are not available categories '}]
+        return jsonify({'Categories': error})
+
+    return jsonify(Categories=[i.serialize for i in category_list])
+
+@app.route('/catalog/<string:category_name>/JSON')
+def categoryJSON(category_name):
+    category = session.query(Category).filter_by(name=category_name).one()
+    items = session.query(Item).filter_by(category_id=category.id).all()
+    if ((not category) or ( not items)):
+        error = [{'Error Message': 'There are not available items '}]
+        return jsonify({'Items': error})
+
+    return jsonify(Items=[i.serialize for i in items])
+
+@app.route('/catalog/<string:category_name>/<string:item_name>/JSON')
+def categoryItemsJSON(category_name, item_name):
+    category = session.query(Category).filter_by(name=category_name).one()
+    item = session.query(Item).filter((Item.name == item_name) & (Item.category_id == category.id)).one()
+    if ((not category) or ( not items)):
+        error = [{'Error Message': 'Item not found!'}]
+        return jsonify({'Item': error})
+    return jsonify(Item=item.serialize)    
+
+
 @app.route('/')
 @app.route('/catalog', methods=['GET', 'POST'])
 def showCategories():
@@ -219,10 +243,6 @@ def showCategories():
         return render_template('publiccategories.html', categories=categories)
     else:
         return render_template('categories.html', categories=categories, login_session=login_session)
-        
-
-    #return render_template('publiccategories.html', categories=categories)
-
 
 @app.route('/catalog/new', methods=['GET', 'POST'])
 def newCategory():

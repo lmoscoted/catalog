@@ -33,13 +33,13 @@ class Category(Base):
     user = relationship(User)
 
 
-    # @property
-    # def serialize(self):
-    #     #Return object data in easily serializeable format
-    #     return {
-    #     'id'     : self.id,
-    #     'name' : self.name
-    #     }   
+    @property
+    def serialize(self):
+        #Return object data in easily serializeable format
+        return {
+        'id'     : self.id,
+        'name' : self.name
+        }   
 
 
                 
@@ -67,16 +67,17 @@ class Item(Base):
 #Column(db.DateTime, default=datetime.datetime.now)
     
 
-    # @property
-    # def serialize(self):
-    #     #Return object data in easily serializeable format
-    #     return {
-    #     'name'     : self.name,
-    #     'description' : self.description,
-    #     'id'  : self.id,
-    #      'price' : self.price,
-    #      'course' : self.course
-    #     }
+    @property
+    def serialize(self):
+        #Return object data in easily serializeable format
+        return {
+        'name'     : self.name,
+        'description' : self.description,
+        'id'  : self.id,
+         'price' : self.price,
+         #'date_update' : self.date_update,
+         'picture'     : self.picture    
+        }
     
 
 engine = create_engine('sqlite:///catalogitems.db')
