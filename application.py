@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request, flash, jsonify
+from flask import Flask, render_template, redirect, url_for, request, flash, jsonify, abort
 from sqlalchemy import create_engine, DateTime
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
@@ -50,12 +50,12 @@ session = DBSession() # interefaz that allow to create DB operations
 
 #state = some_random_string() # CFSR Tokem
 
-@app.before_request
-def csrf_protect():
-    if request.method == "POST":
-        token = login_session.pop('state', None)
-        if not token or token != request.form.get('_csrf_token'):
-            abort(403)
+# @app.before_request
+# def csrf_protect():
+#     if request.method == "POST":
+#         token = login_session.pop('state', None)
+#         if not token or token != request.form.get('_csrf_token'):
+#             abort(403)
 
 def generate_csrf_token():
     if 'state' not in login_session:
@@ -65,8 +65,9 @@ def generate_csrf_token():
 
 def some_random_string():
     random_string = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
-    return random_string    
+    return random_string   
 
+# token_csfr = generate_csrf_token
 app.jinja_env.globals['state'] = generate_csrf_token
 
 
@@ -75,6 +76,7 @@ app.jinja_env.globals['state'] = generate_csrf_token
 def showLogin():
     state = generate_csrf_token()
     login_session['state'] = state
+
     return render_template('login.html', STATE=state)
 
 
@@ -268,10 +270,20 @@ def categoryItemsJSON(category_name, item_name):
 def showCategories():
     
     categories = session.query(Category).order_by(Category.name)
+    items = session.query(Item).order_by("Item.date_update desc")
+    latest_items = items.limit(10)
+    category_item = []
+    print(latest_items)
+    for i in latest_items:
+        cat_name = session.query(Category).filter_by(id=i.category_id).one()
+        category_item.append(cat_name.name)
+        print(i.name)
+
+        #print(category_item.name)
     if 'username' not in login_session:
-        return render_template('publiccategories.html', categories=categories)
+        return render_template('publiccategories.html', categories=categories, login_session=login_session, latest_items=latest_items, category_item=category_item)
     else:
-        return render_template('categories.html', categories=categories, login_session=login_session)
+        return render_template('categories.html', categories=categories, login_session=login_session, latest_items=latest_items, category_item=category_item)
 
 @app.route('/catalog/new', methods=['GET', 'POST'])
 def newCategory():
@@ -465,9 +477,9 @@ def deleteItem(category_name, item_name):
 def infoItem(category_name, item_name):
     category = session.query(Category).filter_by(name=category_name).one()
     item = session.query(Item).filter((Item.name==item_name) & (Item.category_id == category.id)).one()
-
+    categories = session.query(Category).order_by(Category.name)
     if 'username' not in login_session:
-        return render_template('publicitem.html', category_name=category_name, item=item)
+        return render_template('publicitem.html', category_name=category_name, item=item,  categories=categories)
 
 
     #print("This item is repeated %s times!"%len(items))
@@ -482,7 +494,7 @@ def infoItem(category_name, item_name):
     
 
     else: 
-        return render_template('item.html', category_name=category_name, item=item)
+        return render_template('item.html', category_name=category_name, item=item, categories=categories)
 
 
 

@@ -1,58 +1,154 @@
-{% extends "main.html" %}
-{% block content %}
-{% include "header.html" %}
-	<div class="row top-menu">
-		<div class="col-md-10"></div>
-		<div class="col-md-2 text-right">
-					</div>
-	</div>
-	<div class="row divider blue">
-		<div class="col-md-12"></div>
-	</div>
-	<div class="row banner main">
-		<div class="col-md-1"></div>
-		<div class="col-md-11 padding-none">
-			<h1>Categories</h1>
-		</div>
-	</div>
+<!DOCTYPE html>
+<html lang="en">
 
-<!-- <div class = 'flash'>
-		      {% with messages = get_flashed_messages() %}
-      {% if messages %}
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Shop Item - Start Bootstrap Template</title>
+
+
+
+    <!-- Bootstrap core CSS -->
+
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}">
+    
+    <!-- Custom styles for this template -->
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/shop-item.css') }}">
+  
+
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="/catalog">Catalog App</a>
+
+
+
+        {% if 'username' not in login_session %}
+          <a href = '{{url_for('showLogin')}}' class="btn btn-success">Login</a> 
+
+          {% else %}
+          <a href = '{{url_for('disconnect')}}' class="btn btn-success">Logout</a> 
+      
+
+        {% endif %} 
+
+        
+        
+
+
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="/catalog">Home
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">About</a>
+            </li>
+            <!-- <li class="nav-item">
+              <a class="nav-link" href="#">Services</a>
+            </li> -->
+            <li class="nav-item">
+              <a class="nav-link" href="#">Contact</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+
+      <div class="row">
+
+        <div class="col-lg-3">
+          <h1 class="my-4">Categories</h1>
+          <div class="list-group">
+
+          	{% for category in categories %}
+            <a href="{{url_for('showItems',category_name=category.name)}}" class="list-group-item">{{category.name}}</a>
+            {% endfor %}
+          </div>
+        </div>
+        
+
+      <!-- /.col-lg-3 -->
+        <div class="col-lg-9">
+
+          <div class="card mt-4">
+            <!-- <img class="card-img-top img-fluid" src="http://placehold.it/900x400" alt=""> -->
+            <div class="card-body">
+              <h2 class="card-title">Latest Items</h2>
+              {% for item in latest_items %}
+
+               
+            <a href="{{url_for('infoItem',category_name=category_item[loop.index0].name,item_name=item.name)}}" class="list-group-item">{{item.name}}</a>
+      
+            <p class="list-group-item"> {{category_item[loop.index0]}}  </p>
+ 
+ 
+
+            {% endfor %}
           
-        <ul>
-        {% for message in messages %}
-            <li> <strong> {{ message }} </strong> </li>
-        {% endfor %}
-        </ul>
-        {% endif %}
-    {% endwith %}
+            </div>
+          </div>
+          <!-- /.card -->
 
-</div> -->
-	
-	<div class="row padding-top padding-bottom">
-		<div class="col-md-1"></div>
-		<div class="col-md-10 padding-none">
-			<!-- <a href="{{url_for('newCategory')}}">
-				<button class="btn btn-default" id="new-category">
-					<span class="glyphicon glyphicon-cutlery" aria-hidden="true"></span>Add Category
-				</button>
-			</a> -->
-		</div>
-		<div class="col-md-1"></div>
-	</div>
-	{% for category in categories %}
-		<a href = "{{url_for('showItems',category_name=category.name)}}">
-			<div class="row">
-				<div class="col-md-1"></div>
-					<div class="col-md-10 restaurant-list">
-						<h3>{{category.name}}</h3>
-						<!-- <a href = '{{url_for('editCategory', category_name=category.name)}}'> Edit  </a>
-						<a href = '{{url_for('deleteCategory', category_name=category.name)}}'> Delete  </a> -->
+          <!-- <div class="card card-outline-secondary my-4">
+            <div class="card-header">
+              Product Reviews
+            </div>
+            <div class="card-body">
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
+              <small class="text-muted">Posted by Anonymous on 3/1/17</small>
+              <hr>
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
+              <small class="text-muted">Posted by Anonymous on 3/1/17</small>
+              <hr>
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
+              <small class="text-muted">Posted by Anonymous on 3/1/17</small>
+              <hr>
+              <a href="#" class="btn btn-success">Leave a Review</a>
+            </div>
+          </div> -->
+          <!-- /.card -->
 
-					</div>
-				<div class="col-md-1"></div>
-			</div>
-		</a>
-	{% endfor %}
-{% endblock %}
+        </div>
+        <!-- /.col-lg-9 -->
+
+
+
+
+
+      </div>
+
+    </div>
+    <!-- /.container -->
+
+    <!-- Footer -->
+    <footer class="py-5 bg-dark">
+      <div class="container">
+        <p class="m-0 text-center text-white">Copyright &copy; Your Website 2017</p>
+      </div>
+      <!-- /.container -->
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+  </body>
+
+</html>
