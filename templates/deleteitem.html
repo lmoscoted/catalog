@@ -8,7 +8,7 @@
 <h1> Are you sure you want to delete the {{item.name}} from the {{category_name}} category? </h1>
 
 <form action={{url_for('deleteItem', category_name=category_name, item_name=item.name)}} method = 'post'>
-
+<input name=_csrf_token type=hidden value="{{ state() }}">
 <input type='submit', value = 'Delete'>
 
 

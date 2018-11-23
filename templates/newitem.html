@@ -5,10 +5,13 @@
 </head>
 <h1> Create  Category Item </h1>
 <body>
+ 
+
 <div class="pane">
- <form action='{{url_for('newItem',category_name=category_name)}}' method='post' 
+ <form action='{{url_for('newItem',category_name=category_name)}}' method='post'> 
  <p> Name: </p>
 	 <input type = 'text' size= '30' name= 'name' >
+	 <input name=_csrf_token type=hidden value="{{ state() }}">
 
  </br>
  </br>

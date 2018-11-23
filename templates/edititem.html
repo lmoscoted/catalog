@@ -7,7 +7,7 @@
 <h1> Edit Category Item </h1>
 
 <form action='{{url_for('editItem', category_name=category_name, item_name=item.name)}}' method = 'post'>
-
+    <input name=_csrf_token type=hidden value="{{ state() }}">
 	<p> Name: </p>
 	 <input type = 'text' size= '30' name= 'name' placeholder
 	 = '{{item.name}}'>
