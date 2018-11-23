@@ -1,0 +1,28 @@
+<!-- <html>
+<head>
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}"/>
+</head> -->
+
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+
+
+<h1> New Category </h1>
+
+<body>
+<div class="pane">
+<form action='{{url_for('newCategory')}}' method='post' 
+<div class="name"> 
+<p> Name: </p>
+	 <input type = 'text' size= '30' name= 'name'>
+	 <input name=_csrf_token type=hidden value="{{ state() }}">
+
+<input type='submit' value='Create'>
+
+<a href = '/catalog'> Cancel </a>
+</div>>
+</form>	 
+</body>
+</div>
+{% endblock%}

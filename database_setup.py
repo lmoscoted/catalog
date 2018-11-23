@@ -16,7 +16,7 @@ Base = declarative_base()
 
 
 class User(Base):
-            """docstring for ClassNam"""
+            
             __tablename__ = 'user'
 
             id = Column(Integer, primary_key=True)
@@ -39,14 +39,12 @@ class Category(Base):
     def serialize(self):
         #Return object data in easily serializeable format
         return {
+        
         'id'     : self.id,
-        'name' : self.name,
-        'items': [item.serialize for item in self.items]
+        'items': [item.serialize for item in self.items],
+        'name' : self.name
+        
         }  
-    @property
-    def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__, 
-            sort_keys=True, indent=4)
 
 
 
@@ -86,10 +84,10 @@ class Item(Base):
          #'date_update' : self.date_update,
          'picture'     : self.picture    
         }
-    @property
-    def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__, 
-            sort_keys=True, indent=4)
+    # @property
+    # def toJSON(self):
+    #     return json.dumps(self, default=lambda o: o.__dict__, 
+    #         sort_keys=True, indent=4)
 
 engine = create_engine('sqlite:///catalogitems.db')
 Base.metadata.create_all(engine)
