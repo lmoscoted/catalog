@@ -21,7 +21,7 @@ app = Flask(__name__)
 # Google Client ID 
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
-print(CLIENT_ID)
+#print(CLIENT_ID)
 
 engine = create_engine('sqlite:///catalogitems.db', connect_args={'check_same_thread':False},poolclass=StaticPool) # Which DB python will communicate with
 Base.metadata.bind = engine # Makes connection between class and tables
@@ -44,10 +44,36 @@ session = DBSession() # interefaz that allow to create DB operations
 # items2 = []
 
 
-# Login page with Anti forgery Atack.
+# CSFR PROTECTION 
+
+
+
+#state = some_random_string() # CFSR Tokem
+
+@app.before_request
+def csrf_protect():
+    if request.method == "POST":
+        token = login_session.pop('state', None)
+        if not token or token != request.form.get('_csrf_token'):
+            abort(403)
+
+def generate_csrf_token():
+    if 'state' not in login_session:
+        login_session['state'] = some_random_string()
+    return login_session['state']
+
+
+def some_random_string():
+    random_string = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
+    return random_string    
+
+app.jinja_env.globals['state'] = generate_csrf_token
+
+
+# Login page 
 @app.route('/login')
 def showLogin():
-    state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
+    state = generate_csrf_token()
     login_session['state'] = state
     return render_template('login.html', STATE=state)
 
@@ -212,9 +238,6 @@ def categoriesJSON():
     if not category_list:
         error = [{'Error Message': 'There are not available categories '}]
         return jsonify({'Categories': error})
-
-
-        print([items_cat ])
     
    
     return jsonify(Categories=[[i.serialize for i in category_list ] ])
