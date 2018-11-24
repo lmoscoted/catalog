@@ -394,9 +394,9 @@ def newItem(category_name):
         session.add(item_new)
         session.commit()
         #flash('New Menu Item Created')
-        return redirect(url_for('showItems',category_name=category.name))
+        return redirect(url_for('showItems',category_name=category.name, categories=categories))
     else:
-        return render_template('newItem.html', category_name=category.name)
+        return render_template('newItem.html', category_name=category.name, categories=categories)
     
 
 @app.route('/catalog/<string:category_name>/<string:item_name>/edit', methods=['GET', 'POST'])
@@ -439,7 +439,7 @@ def editItem(category_name, item_name):
         # print("This is category")       
         session.add(item_edited)  
         session.commit()  
-        return redirect(url_for('showItems',category_name=category.name))   
+        return redirect(url_for('showItems',category_name=category.name, categories=categories))   
     else:
         return render_template('edititem.html', category_name=category.name, item=item_edited, categories=categories)
     
@@ -457,7 +457,7 @@ def deleteItem(category_name, item_name):
     if 'username' not in login_session:
         return redirect('/login')
     categories = session.query(Category).order_by(Category.name)
-    catetegory = session.query(Category).filter_by(name=category_name).one()
+    category = session.query(Category).filter_by(name=category_name).one()
     item_deleted = session.query(Item).filter((Item.name==item_name) & (Item.category_id==category.id)).one()
 
     if item_deleted.user_id != login_session['user_id']:
@@ -470,10 +470,10 @@ def deleteItem(category_name, item_name):
         session.delete(item_deleted)
         session.commit()
 
-        return redirect(url_for('showItems',category_name=category.name))   
+        return redirect(url_for('showItems',category_name=category.name, categories=categories))   
     
     else:
-        return render_template('deleteitem.html', category_name=category.name, item=item_deleted)
+        return render_template('deleteitem.html', category_name=category.name, item=item_deleted, categories=categories)
 
 @app.route('/catalog/<string:category_name>/<string:item_name>')
 def infoItem(category_name, item_name):
