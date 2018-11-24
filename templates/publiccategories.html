@@ -95,10 +95,10 @@
               {% for item in latest_items %}
 
                
-            <a href="{{url_for('infoItem',category_name=category_item[loop.index0].name,item_name=item.name)}}" class="list-group-item">{{item.name}}</a>
+            <a href="{{url_for('infoItem',category_name=category_item[loop.index0],item_name=item.name)}}" class="list-group-item">{{item.name}} ({{category_item[loop.index0]}})</a>
       
-            <p class="list-group-item"> {{category_item[loop.index0]}}  </p>
- 
+            <!-- <p class="list-group-item"> {{category_item[loop.index0]}}  </p>
+  -->
  
 
             {% endfor %}

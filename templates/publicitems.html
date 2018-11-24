@@ -1,76 +1,153 @@
-<html>
-<head>
-	
-	</head><link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
-	<body>
+<!DOCTYPE html>
+<html lang="en">
 
-	<div class='pane'>
-		<div class='header'>
-		
-		
-		<h1>{{ category_name }}</h1>
-	</div>	
+  <head>
 
-	
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-	
-
-	<!-- <div class= 'flash'>
-	  {% with messages = get_flashed_messages() %}
-      {% if messages %}
-          
-        <ul>
-        {% for message in messages %}
-            <li> <strong> {{ message }} </strong> </li>
-        {% endfor %}
-        </ul>
-        {% endif %}
-    {% endwith %}
-		
-	</div> -->
+    <title>Shop Item - Start Bootstrap Template</title>
 
 
 
-    {% if items %}
-    {% for i in items %}
-    </br>
-    </br>
-    <div class='nameAndPrice'>
-    	<span class=name>
+    <!-- Bootstrap core CSS -->
 
-    		<a href='{{url_for('infoItem', category_name=category_name, item_name=i['name'] )}}' > {{i['name']}}</a>
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}">
+    
+    <!-- Custom styles for this template -->
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/shop-item.css') }}">
+  
 
-   
-    </div>
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="/catalog">Catalog App</a>
 
 
 
+        {% if 'username' not in login_session %}
+          <a href = '{{url_for('showLogin')}}' class="btn btn-success">Login</a> 
+
+          {% else %}
+          <a href = '{{url_for('disconnect')}}' class="btn btn-success">Logout</a> 
+      
+
+        {% endif %} 
+
+        
+        
+
+
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="/catalog">Home
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">About</a>
+            </li>
+            <!-- <li class="nav-item">
+              <a class="nav-link" href="#">Services</a>
+            </li> -->
+            <li class="nav-item">
+              <a class="nav-link" href="#">Contact</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+
+      <div class="row">
+
+        <div class="col-lg-3">
+          <h1 class="my-4">Categories</h1>
+          <div class="list-group">
+
+          	{% for category in categories %}
+            <a href="{{url_for('showItems',category_name=category.name)}}" class="list-group-item">{{category.name}}</a>
+            {% endfor %}
+          </div>
+        </div>
+        
+
+      <!-- /.col-lg-3 -->
+        <div class="col-lg-9">
+
+          <div class="card mt-4">
+            <!-- <img class="card-img-top img-fluid" src="http://placehold.it/900x400" alt=""> -->
+            <div class="card-body">
+              <h2 class="card-title">{{category_name}} Items</h2>
+              {% for item in items %}
+
+               
+            <a href="{{url_for('infoItem',category_name=category_name,item_name=item.name)}}" class="list-group-item">{{item.name}}</a>
+      
+        
  
-		
-	
 
-    <!-- <div class='editdeletepane'>
-	<a href='{{url_for('editItem', category_name=category_name, item_name=i['name'] )}}' > Edit</a>
+            {% endfor %}
+          
+            </div>
+          </div>
+          <!-- /.card -->
+
+          <!-- <div class="card card-outline-secondary my-4">
+            <div class="card-header">
+              Product Reviews
+            </div>
+            <div class="card-body">
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
+              <small class="text-muted">Posted by Anonymous on 3/1/17</small>
+              <hr>
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
+              <small class="text-muted">Posted by Anonymous on 3/1/17</small>
+              <hr>
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
+              <small class="text-muted">Posted by Anonymous on 3/1/17</small>
+              <hr>
+              <a href="#" class="btn btn-success">Leave a Review</a>
+            </div>
+          </div> -->
+          <!-- /.card -->
+
+        </div>
+        <!-- /.col-lg-9 -->
 
 
-	<a href='{{url_for('deleteItem', category_name=category_name, item_name=i['name'] )}}' > Delete</a>
-
-    </div> -->
-
-		{% endfor %}
-
-    {% else %}
-    </br>
-    </br>
-      <h3>you currently have not  items yet</h3>
-
-    {% endif %}
-		
-</div>
-</div>
-
-	</body>
 
 
+
+      </div>
+
+    </div>
+    <!-- /.container -->
+
+    <!-- Footer -->
+    <footer class="py-5 bg-dark">
+      <div class="container">
+        <p class="m-0 text-center text-white">Copyright &copy; Your Website 2017</p>
+      </div>
+      <!-- /.container -->
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+  </body>
 
 </html>

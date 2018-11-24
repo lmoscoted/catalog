@@ -25,7 +25,14 @@
       <div class="container">
         <a class="navbar-brand" href="/catalog">Catalog App</a>
 
-        <a class="login-logout" href = '{{url_for('showLogin')}}''>Login</a> 
+        {% if 'username' not in login_session %}
+          <a href = '{{url_for('showLogin')}}' class="btn btn-success">Login</a> 
+
+          {% else %}
+          <a href = '{{url_for('disconnect')}}' class="btn btn-success">Logout</a> 
+      
+
+        {% endif %} 
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -68,8 +75,8 @@
     
             <a href="{{url_for('showItems',category_name=category.name)}}" class="list-group-item">{{category.name}}</a>
             
-             <a href="{{url_for('showItems',category_name=category.name)}}" class="list-group-item">{{category.name}}</a>
-            
+             <!-- <a href="{{url_for('showItems',category_name=category.name)}}" class="list-group-item">{{category.name}}</a>
+             -->
             
             {% endfor %}
            </div>

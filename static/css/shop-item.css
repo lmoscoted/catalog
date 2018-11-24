@@ -8,6 +8,19 @@ body {
   padding-top: 54px;
 }
 
+.pane{
+	margin: 0px auto;
+
+
+}
+
+.name-form{
+ margin-bottom: 0px;
+ 
+
+
+}
+
 @media (min-width: 992px) {
   body {
     padding-top: 56px;

@@ -273,11 +273,11 @@ def showCategories():
     items = session.query(Item).order_by("Item.date_update desc")
     latest_items = items.limit(10)
     category_item = []
-    print(latest_items)
+    
     for i in latest_items:
         cat_name = session.query(Category).filter_by(id=i.category_id).one()
         category_item.append(cat_name.name)
-        print(i.name)
+        
 
         #print(category_item.name)
     if 'username' not in login_session:
@@ -290,6 +290,7 @@ def newCategory():
 
     if 'username' not in login_session:
         return redirect('/login')
+    categories = session.query(Category).order_by(Category.name)    
 
     if request.method == 'POST':
         category_new = Category(name=request.form['name'], user_id= getUserID(login_session['email'])) #login_session['user_id']
@@ -297,9 +298,9 @@ def newCategory():
         session.commit()
         #flash('New Restaurant Created')
         #return redirect(url_for('showCategories'))
-        return render_template('newItem.html', category_name=category_new.name)
+        return render_template('newItem.html', category_name=category_new.name, categories=categories)
     else:
-        return render_template('newcategory.html')
+        return render_template('newcategory.html', categories=categories)
 
     
 
@@ -312,6 +313,7 @@ def editCategory(category_name):
         return redirect('/login')
 
     category_edit = session.query(Category).filter_by(name=category_name).one()
+    categories = session.query(Category).order_by(Category.name)
 
     if category_edit.user_id != login_session['user_id']:
         return "<script>function myFunction() {alert('you are no authorized to edit this category. Please create a new category in order to edit');location.href='/catalog';}</script><body onload='myFunction()''>"
@@ -326,7 +328,7 @@ def editCategory(category_name):
         #flash('Restaurant Successfully Edited')
         return redirect(url_for('showCategories'))
     else:
-        return render_template('editcategory.html', category_name=category_edit.name)
+        return render_template('editcategory.html', category_name=category_edit.name, categories=categories)
     
 
 
@@ -338,7 +340,7 @@ def deleteCategory(category_name):
 
     category_dele = session.query(Category).filter_by(name=category_name).one()
     items_dele = session.query(Item).filter_by(category_id=category_dele.id).all()    
-
+    categories = session.query(Category).order_by(Category.name)
 
     if category_dele.user_id != login_session['user_id']:
         return "<script>function myFunction() {alert('you are no authorized to delete this category. Please access to your own category in order to delete');location.href='/catalog';}</script><body onload='myFunction()''>"
@@ -353,7 +355,7 @@ def deleteCategory(category_name):
         #flash('Restaurant Successfully Deleted')
         return redirect(url_for('showCategories'))
     else:
-        return render_template('deletecategory.html', category_name=category_dele.name)
+        return render_template('deletecategory.html', category_name=category_dele.name, categories=categories)
 
 
 
@@ -364,15 +366,16 @@ def deleteCategory(category_name):
 def showItems(category_name):
     category = session.query(Category).filter_by(name=category_name).one()
     items = session.query(Item).filter_by(category_id=category.id).all()
-
+    items_number = len(items)
+    categories = session.query(Category).order_by(Category.name)
     if not items:
         return "<script>function myFunction() {alert('This category do not have items yet. Please add new items for this category');location.href='/catalog/%s/new';}</script><body onload='myFunction()''>" % category_name
     
     if 'username' not in login_session:
-        return render_template('publicitems.html', category_name=category.name, items=items)
+        return render_template('publicitems.html', category_name=category.name, items=items, categories=categories, items_number=items_number)
 
     else:    
-        return render_template('items.html', category_name=category.name, items=items)
+        return render_template('items.html', category_name=category.name, items=items, categories=categories, items_number=items_number)
     #return render_template('publicitems.html', category_name=category.name, items=items)
 
 
@@ -383,6 +386,7 @@ def newItem(category_name):
         return redirect('/login')
 
     category = session.query(Category).filter_by(name=category_name).one()
+    categories = session.query(Category).order_by(Category.name)
 
    # Anybody can add an item to any category
     if request.method == 'POST':
@@ -450,12 +454,10 @@ def editItem(category_name, item_name):
 
 @app.route('/catalog/<string:category_name>/<string:item_name>/delete', methods=['GET', 'POST'])
 def deleteItem(category_name, item_name):
-
     if 'username' not in login_session:
         return redirect('/login')
-
-
-    category = session.query(Category).filter_by(name=category_name).one()
+    categories = session.query(Category).order_by(Category.name)
+    catetegory = session.query(Category).filter_by(name=category_name).one()
     item_deleted = session.query(Item).filter((Item.name==item_name) & (Item.category_id==category.id)).one()
 
     if item_deleted.user_id != login_session['user_id']:
