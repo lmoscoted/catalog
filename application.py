@@ -259,7 +259,7 @@ def categoryJSON(category_name):
 def categoryItemsJSON(category_name, item_name):
     category = session.query(Category).filter_by(name=category_name).one()
     item = session.query(Item).filter((Item.name == item_name) & (Item.category_id == category.id)).one()
-    if ((not category) or ( not items)):
+    if ((not category) or ( not item)):
         error = [{'Error Message': 'Item not found!'}]
         return jsonify({'Item': error})
     return jsonify(Item=item.serialize)    

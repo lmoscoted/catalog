@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Shop Item - Start Bootstrap Template</title>
+    <title> Items Category</title>
 
 
 
@@ -27,9 +27,9 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div class="container">
-        <a class="navbar-brand" href="/catalog">Catalog App</a>
+        <a class="navbar-brand" href="/catalog" style="font-size:xx-large;font-weight: bold;">Catalog App</a>
 
-          <a href = '{{url_for('disconnect')}}' class="btn btn-success">Logout</a> 
+           
       
 
       
@@ -61,6 +61,7 @@
           </ul>
         </div>
       </div>
+      <a href = '{{url_for('disconnect')}}' class="btn btn-success">Logout</a>
     </nav>
 
     <!-- Page Content -->
@@ -69,11 +70,11 @@
       <div class="row">
 
         <div class="col-lg-3">
-          <h1 class="my-4">Categories</h1>
+          <h2 class="my-4">Categories</h2>
           <div class="list-group">
 
           	{% for category in categories %}
-            <a href="{{url_for('showItems',category_name=category.name)}}" class="list-group-item">{{category.name}}</a>
+            <a href="{{url_for('showItems',category_name=category.name)}}" class="list-group-item" style="font-weight: bold;font-size:large;">{{category.name}}</a>
             {% endfor %}
           </div>
         </div>
@@ -85,7 +86,7 @@
           <div class="card mt-4">
             <!-- <img class="card-img-top img-fluid" src="http://placehold.it/900x400" alt=""> -->
             <div class="card-body">
-              <a href = '{{url_for('newItem', category_name=category_name)}}''>Add Item</a>
+              <a href = '{{url_for('newItem', category_name=category_name)}} ' style="text-decoration: underline;font-weight: bold; color: #00f;margin: 30px auto">Add Item</a>
               <h2 class="card-title">{{category_name}} Items ({{items_number}})</h2>
               {% for item in items %}
 

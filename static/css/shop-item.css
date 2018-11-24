@@ -16,8 +16,18 @@ body {
 
 .name-form{
  margin-bottom: 0px;
- 
 
+
+}
+
+.list-group-item:hover a{ color: blue
+
+
+}
+
+
+/*div:hover h1{color:red;} 
+div:hover p {color:blue;}*/
 
 }
 

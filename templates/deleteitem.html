@@ -27,9 +27,9 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div class="container">
-        <a class="navbar-brand" href="/catalog"> Catalog App </a>
+        <a class="navbar-brand" href="/catalog" style="font-size:xx-large;font-weight: bold;"> Catalog App </a>
         
-          <a href = '{{url_for('disconnect')}}' class="btn btn-success">Logout</a>
+          
 
   
 
@@ -60,6 +60,7 @@
           </ul>
         </div>
       </div>
+      <a href = '{{url_for('disconnect')}}' class="btn btn-success">Logout</a>
     </nav>
 
     <!-- Page Content -->
@@ -73,11 +74,11 @@
 
         <div class="col-lg-3">
           <!-- <a class="add-category"href="{{url_for('newCategory')}}">Add Category</a> -->
-          <h1 class="my-4">Categories</h1>
+          <h2 class="my-4">Categories</h2>
           <div class="list-group">
 
           	{% for category in categories %}
-            <a href="{{url_for('showItems',category_name=category.name)}}" class="list-group-item ">{{category.name}}</a>
+            <a href="{{url_for('showItems',category_name=category.name)}}" class="list-group-item "style="font-weight: bold;font-size:large;">{{category.name}}</a>
            <!--  <a href = '{{url_for('editCategory', category_name=category.name)}}'> Edit  </a>
 			<a href = '{{url_for('deleteCategory', category_name=category.name)}}'> Delete  </a> -->
             {% endfor %}
