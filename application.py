@@ -137,10 +137,12 @@ def gconnect():
     params = {'access_token': credentials.access_token, 'alt': 'json'}
     answer = requests.get(userinfo_url, params=params)
     data = json.loads(answer.text)
+    print(data)
 
     login_session['username'] = data["name"]
     login_session['picture'] = data["picture"]
     login_session['email'] = data['email']
+    print(login_session['username'])
 
     # See if user exists, if it does not make a new one
 
@@ -153,6 +155,7 @@ def gconnect():
     output = 'Logged in'
 
     flash("You are now logged in as %s " % login_session['username'])
+    print(login_session)
 
     return output
 
@@ -198,9 +201,6 @@ def disconnect():
             gdisconnect()
             del login_session['gplus_id']
             del login_session['credentials']
-        if login_session['provider'] == 'facebook':
-            fbdisconnect()
-            del login_session['facebook']
 
         del login_session['username']
         del login_session['email']
