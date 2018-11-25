@@ -84,7 +84,7 @@
             <!-- <img class="card-img-top img-fluid" src="http://placehold.it/900x400" alt=""> -->
             <div class="pane">
             	<h2 class="card-title">Edit Category</h2>
-				<form action='{{url_for('newCategory')}}' method='post'
+				<form action='{{url_for('editCategory', category_name=category_name)}}' method='post'
   				<div class="name"> 
   				<p class="name-form"> Name </p>
   					 <input type = 'text' size= '30' name= 'name'>

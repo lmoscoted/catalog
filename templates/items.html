@@ -30,13 +30,6 @@
         <a class="navbar-brand" href="/catalog" style="font-size:xx-large;font-weight: bold;">Catalog App</a>
 
            
-      
-
-      
-
-        
-        
-
 
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,6 +77,19 @@
         <div class="col-lg-9">
 
           <div class="card mt-4">
+
+            <div class= 'flash' style="color: black; margin: 5px auto;font-size:large;font-weight: bold">
+             {% with messages = get_flashed_messages() %}
+             {% if messages %} 
+        
+              <ul>
+            {% for message in messages %}
+                <li> <strong> {{ message }} </strong> </li>
+            {% endfor %}
+             </ul>
+           {% endif %}
+           {% endwith %}
+         </div>
             <!-- <img class="card-img-top img-fluid" src="http://placehold.it/900x400" alt=""> -->
             <div class="card-body">
               <a href = '{{url_for('newItem', category_name=category_name)}} ' style="text-decoration: underline;font-weight: bold; color: #00f;margin: 30px auto">Add Item</a>

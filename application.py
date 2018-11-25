@@ -291,7 +291,7 @@ def newCategory():
                 login_session['email']))  # login_session['user_id']
         session.add(category_new)
         session.commit()
-        # flash('New Restaurant Created')
+        flash('Category %s created!' %category_new.name)
         return render_template(
             'newItem.html',
             category_name=category_new.name,
@@ -320,7 +320,7 @@ def editCategory(category_name):
             category_edit.name = request.form['name']
             session.add(category_edit)
             session.commit()
-        # flash('Restaurant Successfully Edited')
+        flash('Category %s successfully edited!' %category_edit.name)
         return redirect(url_for('showCategories'))
     else:
         return render_template(
@@ -354,7 +354,7 @@ def deleteCategory(category_name):
         for i in items_dele:
             session.delete(i)
         session.commit()
-        # flash('Restaurant Successfully Deleted')
+        flash('Categoria %s successfully deleted!' %category_dele.name)
         return redirect(url_for('showCategories'))
     else:
         return render_template(
@@ -410,8 +410,9 @@ def newItem(category_name):
             category_id=category.id,
             user_id=getUserID(
                 login_session['email']))
+        session.add(item_new)
         session.commit()
-        # flash('New Menu Item Created')
+        flash('Item %s Created!' %item_new.name)
         return redirect(
             url_for(
                 'showItems',
@@ -469,6 +470,7 @@ def editItem(category_name, item_name):
 
         session.add(item_edited)
         session.commit()
+        flash('Item %s Edited!' % item_edited.name)
         return redirect(
             url_for(
                 'showItems',
@@ -511,6 +513,7 @@ def deleteItem(category_name, item_name):
     if request.method == 'POST':
         session.delete(item_deleted)
         session.commit()
+        flash('Item %s successfully deleted!' %item_deleted.name)
 
         return redirect(
             url_for(

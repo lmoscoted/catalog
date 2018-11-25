@@ -68,6 +68,9 @@
         <div class="col-lg-3">
           <!-- <a class="add-category"href="{{url_for('newCategory')}}">Add Category</a> -->
           <h2 class="my-4">Categories</h2>
+
+
+
           <div class="list-group">
 
           	{% for category in categories %}
@@ -80,6 +83,20 @@
         <div class="col-lg-9">
 
           <div class="card mt-4">
+
+            <div class= 'flash' style="color: black; margin: 5px auto;font-size:large;font-weight: bold">
+             {% with messages = get_flashed_messages() %}
+             {% if messages %} 
+        
+              <ul>
+            {% for message in messages %}
+                <li> <strong> {{ message }} </strong> </li>
+            {% endfor %}
+             </ul>
+           {% endif %}
+           {% endwith %}
+          </div>
+
             <!-- <img class="card-img-top img-fluid" src="http://placehold.it/900x400" alt=""> -->
             <div class="pane">
             	<h2 class="card-title">New Item</h2>
