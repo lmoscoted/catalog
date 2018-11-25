@@ -29,6 +29,9 @@
       <div class="container">
         <a class="navbar-brand" href="/catalog" style="font-size:xx-large;font-weight: bold;">Catalog App</a>
 
+        
+    
+       </div>   
 
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,8 +80,21 @@
 
           <div class="card mt-4">
             <!-- <img class="card-img-top img-fluid" src="http://placehold.it/900x400" alt=""> -->
+
+            <div class= 'flash' style="color: black; margin: 5px auto;font-size:large;font-weight: bold">
+             {% with messages = get_flashed_messages() %}
+             {% if messages %} 
+        
+              <ul>
+            {% for message in messages %}
+                <li> <strong> {{ message }} </strong> </li>
+            {% endfor %}
+             </ul>
+           {% endif %}
+           {% endwith %}
+         </div>
             <div class="card-body">
-              <h2 class="card-title">Latest Items</h2>
+              <h2 class="card-title" style=" margin-top: 0px ">Latest Items</h2>
               {% for item in latest_items %}
 
                
