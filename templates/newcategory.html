@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html5>
 <html lang="en">
 
   <head>
@@ -100,7 +100,7 @@
 				<form action='{{url_for('newCategory')}}' method='post'
 				<div class="name"> 
 				<p class="name-form"> Name </p>
-					 <input type = 'text' size= '30' name= 'name'>
+					 <input type = 'text' size= '30' name= 'name' required="required">
 					 <input name=_csrf_token type=hidden value="{{ state() }}">
 
 					<input class="btn btn-success" type='submit' value='Create'>
