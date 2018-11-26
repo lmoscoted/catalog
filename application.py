@@ -56,13 +56,18 @@ def some_random_string():
 
 
 state = some_random_string()
+
+
 # CFSR Protection
 @app.before_request
 def csrf_protect():
-    if request.method == "POST":
-        #token = login_session.pop('state', None)
+    if request.method == "POST" and (request.endpoint != 'gconnect'):
+        #t oken = login_session.pop('state', None)
         token = state
         print(token)
+        print(request.path)
+        print(request.endpoint)
+        # print(app.route())
         print(request.form.get('_csrf_token'))
         if not token or token != request.form.get('_csrf_token'):
             abort(403)
@@ -82,7 +87,7 @@ def csrf_protect():
 
 
 # Login page
-@app.route('/login')
+@app.route('/login', endpoint='showLogin')
 def showLogin():   
     
     login_session['state'] = state
@@ -381,7 +386,7 @@ def deleteCategory(category_name):
         return render_template(
             'deletecategory.html',
             category_name=category_dele.name,
-            categories=categories)
+            categories=categories, state=state)
 
 
 @app.route('/catalog/<string:category_name>/items')
@@ -470,24 +475,24 @@ def editItem(category_name, item_name):
                 'myFunction()''>" % category_name
 
     if request.method == 'POST':
-        if request.form['name']:
+        if request.form.get('name'):
             item_edited.name = request.form['name']
             item_edited.date_update = func.now()
 
-        if request.form['description']:
+        if request.form.get('description'):
             item_edited.description = request.form['description']
             item_edited.date_update = func.now()
 
-        if request.form['price']:
+        if request.form.get('price'):
             item_edited.price = request.form['price']
             item_edited.date_update = func.now()
 
-        if request.form['picture']:
+        if request.form.get('picture'):
             item_edited.picture = request.form['picture']
             item_edited.date_update = func.now()
 
-        if category_name != categories[int(request.form['category'])]:
-            item_edited.category = categories[int(request.form['category'])]
+        if category_name != categories[int(request.form.get('category'))]:
+            item_edited.category = categories[int(request.form.get('category'))]
             item_edited.date_update = func.now()
 
         session.add(item_edited)
@@ -505,12 +510,6 @@ def editItem(category_name, item_name):
             item=item_edited,
             categories=categories, 
             state=state)
-
-    # return render_template(
-    #     'edititem.html',
-    #     category_name=category['name'],
-    #     categories=categories,
-    #     item=item)
 
 
 @app.route(
@@ -549,7 +548,7 @@ def deleteItem(category_name, item_name):
             'deleteitem.html',
             category_name=category.name,
             item=item_deleted,
-            categories=categories)
+            categories=categories, state=state)
 
 
 @app.route('/catalog/<string:category_name>/<string:item_name>')

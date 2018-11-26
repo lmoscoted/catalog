@@ -83,7 +83,9 @@
 
 <!-- End sign in  Card -->
 <div id="result">
-  
+  <form action="/login">
+  <input id= "CSFR" name=_csrf_token type=hidden value="{{STATE}}">
+</form>
 </div>
 
 
@@ -94,6 +96,8 @@ function signInCallback(authResult) {
   if (authResult['code']) {
     // Hide the sign-in button now that the user is authorized
     $('#signinButton').attr('style', 'display: none');
+    /*var csfr = document.getElementByID("CSFR");
+    csfr.value = {{STATE}};*/
     // Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main page
     $.ajax({
       type: 'POST',
