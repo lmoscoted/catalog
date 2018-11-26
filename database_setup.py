@@ -1,16 +1,18 @@
 import os
 import sys
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
+import datetime
+import json
+
+from sqlalchemy import Column 
+from sqlalchemy import ForeignKey
+from sqlalchemy import Integer
+from sqlalchemy import String
+from sqlalchemy import DateTime
 from sqlalchemy.sql import func
-#import DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
-import datetime
-import json
-#----------------------------------
-# We must install DateTime Package
-#---------------------------------
+
  
 Base = declarative_base()
 
@@ -37,7 +39,7 @@ class Category(Base):
 
     @property
     def serialize(self):
-        #Return object data in easily serializeable format
+        # Return object data in easily serializeable format
         return {
         
         'id'     : self.id,
@@ -45,11 +47,7 @@ class Category(Base):
         'name' : self.name
         
         }  
-
-
-
-                
-                        
+                    
  
 class Item(Base):
     __tablename__ = 'item'
@@ -60,34 +58,26 @@ class Item(Base):
     price = Column(String(8))
     picture = Column(String(250), nullable = True)
     category_id = Column(Integer,ForeignKey('category.id'))
-    #date_creation = Column(DateTime(timezone=True), server_default=func.now())
-    #date_creation = Column(datetime.datetime, default=datetime.datetime.today())
-    #date_creation = Column(datetime.datetime, default=func.now())
-    #date_creation = Column(DateTime(), default=datetime.datetime.utcnow())
-    
-    date_creation = Column(DateTime(timezone=True), server_default=func.now())
-    date_update = Column(DateTime(timezone=True), server_default=func.now())
+    date_creation = Column(DateTime(timezone=True), 
+                            server_default=func.now())
+    date_update = Column(DateTime(timezone=True), 
+                         server_default=func.now())
     category = relationship(Category, back_populates='items')
     user_id = Column(Integer,ForeignKey('user.id'))
     user = relationship(User)
-#Column(db.DateTime, default=datetime.datetime.now)
     
 
     @property
     def serialize(self):
-        #Return object data in easily serializeable format
+        # Return object data in easily serializeable format
         return {
         'name'     : self.name,
         'description' : self.description,
         'id'  : self.id,
-         'price' : self.price,
-         #'date_update' : self.date_update,
-         'picture'     : self.picture    
+        'price' : self.price,
+        # 'date_update' : self.date_update,
+        'picture'     : self.picture    
         }
-    # @property
-    # def toJSON(self):
-    #     return json.dumps(self, default=lambda o: o.__dict__, 
-    #         sort_keys=True, indent=4)
 
 engine = create_engine('sqlite:///catalogitems.db')
 Base.metadata.create_all(engine)
