@@ -100,15 +100,15 @@
             <!-- <img class="card-img-top img-fluid" src="http://placehold.it/900x400" alt=""> -->
             <div class="pane">
             	<h2 class="card-title">New Item</h2>
-				<form action='{{url_for('newItem',category_name=category_name)}}' method='post'
+				<form action='{{url_for('newItem',category_name=category_name)}}' method='post'>
 				<div class="name"> 
 				<p class="name-form"> Name </p>
 					 <input type = 'text' size= '30' name= 'name' required="required">
-					 <input name=_csrf_token type=hidden value="{{ state() }}">
+					 <input name=_csrf_token type=hidden value="{{ state }}">
 					 <p class="name-form"> Description: </p>
 					 <input type = 'text' size= '30' name= 'description' required="required">
 					 <p class="name-form"> Price ($): </p>
-					 <input type = 'number' size= '30' name= 'price' required="required" >
+					 <input type = 'number' size= '30' name= 'price' min="0" required="required" >
 					 <p class="name-form"> Picture: </p>
 	 				<input type = 'text' disabled="yes"  size= '30' name= 'picture' placeholder
 	 				= "Item's picture">

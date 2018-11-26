@@ -46,11 +46,6 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()  # interefaz that allow to create DB operations
 
 
-def generate_csrf_token():
-    if 'state' not in login_session:
-        login_session['state'] = some_random_string()
-    return login_session['state']
-
 
 def some_random_string():
     random_string = ''.join(
@@ -60,16 +55,38 @@ def some_random_string():
     return random_string
 
 
+state = some_random_string()
+# CFSR Protection
+@app.before_request
+def csrf_protect():
+    if request.method == "POST":
+        #token = login_session.pop('state', None)
+        token = state
+        print(token)
+        print(request.form.get('_csrf_token'))
+        if not token or token != request.form.get('_csrf_token'):
+            abort(403)
+
+
+# def generate_csrf_token():
+#     if 'state' not in login_session:
+#         login_session['state'] = some_random_string()
+#     return login_session['state']
+
+
+
+
+
 # token_csfr = generate_csrf_token
-app.jinja_env.globals['state'] = generate_csrf_token
+# app.jinja_env.globals['state'] = state
 
 
 # Login page
 @app.route('/login')
-def showLogin():
-    state = some_random_string()
+def showLogin():   
+    
     login_session['state'] = state
-
+    #app.jinja_env.globals['state'] = login_session['state']
     return render_template('login.html', STATE=state)
 
 
@@ -86,7 +103,9 @@ def gconnect():
         # Upgrade the authorized code into a credentials object
         oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
+        print(oauth_flow.redirect_uri)
         credentials = oauth_flow.step2_exchange(code)
+        print(credentials)
 
     except FlowExchangeError:
         response = make_response(
@@ -96,6 +115,7 @@ def gconnect():
         return response
     # Check that the access token is valid.
     access_token = credentials.access_token
+    print(access_token)
     url = (
         'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s' %
         access_token)
@@ -297,7 +317,8 @@ def newCategory():
             category_name=category_new.name,
             categories=categories)
     else:
-        return render_template('newcategory.html', categories=categories)
+        return render_template('newcategory.html', categories=categories,
+                                state=state)
 
 
 @app.route('/catalog/<string:category_name>/edit', methods=['GET', 'POST'])
@@ -326,7 +347,7 @@ def editCategory(category_name):
         return render_template(
             'editcategory.html',
             category_name=category_edit.name,
-            categories=categories)
+            categories=categories, state=state)
 
 
 @app.route('/catalog/<string:category_name>/delete', methods=['GET', 'POST'])
@@ -422,7 +443,8 @@ def newItem(category_name):
         return render_template(
             'newItem.html',
             category_name=category.name,
-            categories=categories)
+            categories=categories,
+            state=state)
 
 
 @app.route(
@@ -481,13 +503,14 @@ def editItem(category_name, item_name):
             'edititem.html',
             category_name=category.name,
             item=item_edited,
-            categories=categories)
+            categories=categories, 
+            state=state)
 
-    return render_template(
-        'edititem.html',
-        category_name=category['name'],
-        categories=categories,
-        item=item)
+    # return render_template(
+    #     'edititem.html',
+    #     category_name=category['name'],
+    #     categories=categories,
+    #     item=item)
 
 
 @app.route(

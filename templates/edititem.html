@@ -85,7 +85,7 @@
   				<p class="name-form"> Name </p>
   					 <input type = 'text' size= '30' name= 'name' placeholder
             = '{{item.name}}'>
-  					 <input name=_csrf_token type=hidden value="{{ state() }}">
+  					 <input name=_csrf_token type=hidden value="{{state}}">
             </br>
           <p class="name-form"> Description: </p>
             <input type = 'text' size= '30' name= 'description' placeholder
@@ -113,8 +113,8 @@
 
             {% endif %}  
 
-          <p class="name-form"> Price: </p>
-             <input type = 'number' size= '30' name= 'price' placeholder
+          <p class="name-form"> Price ($): </p>
+             <input type = 'number' size= '30' min= '0' name= 'price' placeholder
              = '{{item.price}}'>
             </br>
           <p class="name-form"> Picture: </p>
