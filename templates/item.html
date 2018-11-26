@@ -86,7 +86,7 @@
             <img class="card-img-top img-fluid" src="http://placehold.it/900x400" alt="">
             <div class="card-body">
               <h3 class="card-title">{{ item['name'] }}</h3>
-              <h4>{{item['price']}}</h4>
+              <h4> &#36;{{item['price']}}</h4>
               <p class="card-text">{{item['description']}}</p>
 				<a style="text-decoration: underline;font-weight: bold; color:#0000ff;margin: 0px auto" href='{{url_for('editItem', category_name=category_name, item_name=item['name'] )}}' >Edit</a>
 
