@@ -48,6 +48,17 @@ python application.py
 
 After that step, you will be able to access to the website project by typing on your web browser whether _localhost:5000/catalog_ or _localhost:5000_. 
 
+### JSON Endpoints
+This app provide three JSON enpoints:
+
+* _http://localhost:5000/catalog/JSON_: It will provide all items from every category.
+
+* _http://localhost:5000/Handball/JSON_: It will provide all items from the Handball category (It can be any category existent in the project).
+
+* _http://localhost:5000/Handball/Ultima%Handbal/JSON_: It will provide information from the Ultima Handball item. 
+
+
+
 
 
 

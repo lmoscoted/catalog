@@ -44,7 +44,7 @@ Base.metadata.bind = engine  # Makes connection between class and tables
 DBSession = sessionmaker(bind=engine)
 session = DBSession()  # interefaz that allow to create DB operations
 
- 
+
 # Create random string for the Google Code and CSFR token
 def some_random_string():
     random_string = ''.join(
@@ -70,9 +70,11 @@ def csrf_protect():
             abort(403)
 
 # Endpint for the login
+
+
 @app.route('/login', endpoint='showLogin')
-def showLogin():   
-    
+def showLogin():
+
     login_session['state'] = state
     return render_template('login.html', STATE=state)
 
@@ -150,7 +152,6 @@ def gconnect():
     login_session['email'] = data['email']
     print(login_session['username'])
 
-
     # See if user exists, if it does not make a new one
     if getUserID(login_session['email']) is None:
         user_id = createUser(login_session)
@@ -195,7 +196,6 @@ def gdisconnect():
         return response
 
 
-
 # DISCONNECT function for any provider
 @app.route('/disconnect')
 def disconnect():
@@ -230,6 +230,8 @@ def categoriesJSON():
     return jsonify(Categories=[[i.serialize for i in category_list]])
 
 # API Endpoint for all items from a category
+
+
 @app.route('/catalog/<string:category_name>/JSON')
 def categoryJSON(category_name):
     category = session.query(Category).filter_by(name=category_name).one()
@@ -241,6 +243,8 @@ def categoryJSON(category_name):
     return jsonify(Items=[i.serialize for i in items])
 
 # API Endpoint for an arbitrary Item
+
+
 @app.route('/catalog/<string:category_name>/<string:item_name>/JSON')
 def categoryItemsJSON(category_name, item_name):
     category = session.query(Category).filter_by(name=category_name).one()
@@ -252,13 +256,15 @@ def categoryItemsJSON(category_name, item_name):
         return jsonify({'Item': error})
     return jsonify(Item=item.serialize)
 
-#Main web page
+# Main web page
+
+
 @app.route('/')
 @app.route('/catalog', methods=['GET', 'POST'])
 def showCategories():
 
     categories = session.query(Category).order_by(Category.name)
-    #items = session.query(Item).order_by("Item.date_update desc")
+    # items = session.query(Item).order_by("Item.date_update desc")
     items = session.query(Item).order_by(desc(Item.date_update))
     latest_items = items.limit(10)
     category_item = []
@@ -283,29 +289,33 @@ def showCategories():
             category_item=category_item)
 
 # Endpoint for a new category
+
+
 @app.route('/catalog/new', methods=['GET', 'POST'])
 def newCategory():
     # Login required for creating a new category
     if 'username' not in login_session:
         return redirect('/login')
     categories = session.query(Category).order_by(Category.name)
-    
+
     if request.method == 'POST':
         category_new = Category(
             name=request.form['name'], user_id=getUserID(
-                login_session['email']))  
+                login_session['email']))
         session.add(category_new)
         session.commit()
-        flash('Category %s created!' %category_new.name)
+        flash('Category %s created!' % category_new.name)
         return render_template(
             'newItem.html',
             category_name=category_new.name,
             categories=categories, state=state)
     else:
         return render_template('newcategory.html', categories=categories,
-                                state=state)
+                               state=state)
 
 # Endpoint for creating a category
+
+
 @app.route('/catalog/<string:category_name>/edit', methods=['GET', 'POST'])
 def editCategory(category_name):
     # Login required for this action
@@ -320,13 +330,13 @@ def editCategory(category_name):
                 to edit this category. Please create a new category in order \
                 to edit');location.href='/catalog';}</script><body \
                 onload='myFunction()''>"
-    
+
     if request.method == 'POST':
         if request.form['name']:
             category_edit.name = request.form['name']
             session.add(category_edit)
             session.commit()
-        flash('Category %s successfully edited!' %category_edit.name)
+        flash('Category %s successfully edited!' % category_edit.name)
         return redirect(url_for('showCategories'))
     else:
         return render_template(
@@ -335,6 +345,8 @@ def editCategory(category_name):
             categories=categories, state=state)
 
 # Endpoint for deleting categories
+
+
 @app.route('/catalog/<string:category_name>/delete', methods=['GET', 'POST'])
 def deleteCategory(category_name):
     # Login required for this action
@@ -360,7 +372,7 @@ def deleteCategory(category_name):
         for i in items_dele:
             session.delete(i)
         session.commit()
-        flash('Categoria %s successfully deleted!' %category_dele.name)
+        flash('Categoria %s successfully deleted!' % category_dele.name)
         return redirect(url_for('showCategories'))
     else:
         return render_template(
@@ -368,7 +380,9 @@ def deleteCategory(category_name):
             category_name=category_dele.name,
             categories=categories, state=state)
 
-#Endpoint for showing the items from a category
+# Endpoint for showing the items from a category
+
+
 @app.route('/catalog/<string:category_name>/items')
 def showItems(category_name):
     category = session.query(Category).filter_by(name=category_name).one()
@@ -400,6 +414,8 @@ def showItems(category_name):
             state=state)
 
 # Endpoint for creating a new item
+
+
 @app.route('/catalog/<string:category_name>/new', methods=['GET', 'POST'])
 def newItem(category_name):
     # Login required for this action
@@ -420,12 +436,12 @@ def newItem(category_name):
                 login_session['email']))
         session.add(item_new)
         session.commit()
-        flash('Item %s Created!' %item_new.name)
+        flash('Item %s Created!' % item_new.name)
         return redirect(
             url_for(
                 'showItems',
                 category_name=category.name,
-                categories=categories,state=state))
+                categories=categories, state=state))
     else:
         return render_template(
             'newItem.html',
@@ -436,7 +452,7 @@ def newItem(category_name):
 
 # Endpoint for editing a category
 @app.route('/catalog/<string:category_name>/<string:item_name>/edit',
-            methods=['GET','POST'])
+           methods=['GET', 'POST'])
 def editItem(category_name, item_name):
     # Login required for this action
     if 'username' not in login_session:
@@ -445,9 +461,9 @@ def editItem(category_name, item_name):
     categories = session.query(Category).order_by(Category.name)
     category = session.query(Category).filter_by(name=category_name).one()
     # Edit item from the desired category
-    item_edited = session.query(Item).filter((Item.name == item_name) & 
-                                              (Item.category_id == 
-                                                category.id)).one()
+    item_edited = session.query(Item).filter((Item.name == item_name) &
+                                             (Item.category_id ==
+                                              category.id)).one()
     # Creator item can only edit it
     if item_edited.user_id != login_session['user_id']:
         return "<script>function myFunction() {alert('You are no \
@@ -477,7 +493,8 @@ def editItem(category_name, item_name):
             item_edited.date_update = func.now()
         # Update category only if it is updated by the user
         if category_name != categories[int(request.form.get('category'))]:
-            item_edited.category = categories[int(request.form.get('category'))]
+            item_edited.category = categories[int(
+                request.form.get('category'))]
             # Update date for the latest items
             item_edited.date_update = func.now()
 
@@ -494,10 +511,12 @@ def editItem(category_name, item_name):
             'edititem.html',
             category_name=category.name,
             item=item_edited,
-            categories=categories, 
+            categories=categories,
             state=state)
 
 # Endpoint for deleting an item
+
+
 @app.route(
     '/catalog/<string:category_name>/<string:item_name>/delete',
     methods=['GET', 'POST'])
@@ -510,7 +529,7 @@ def deleteItem(category_name, item_name):
     item_deleted = session.query(Item).filter(
         (Item.name == item_name) & (
             Item.category_id == category.id)).one()
-    # Creator item can only delete it 
+    # Creator item can only delete it
     if item_deleted.user_id != login_session['user_id']:
         return "<script>function myFunction() {alert('You are no \
                 authorized to delete this item.');location.href=\
@@ -520,7 +539,7 @@ def deleteItem(category_name, item_name):
     if request.method == 'POST':
         session.delete(item_deleted)
         session.commit()
-        flash('Item %s successfully deleted!' %item_deleted.name)
+        flash('Item %s successfully deleted!' % item_deleted.name)
 
         return redirect(
             url_for(
@@ -536,6 +555,8 @@ def deleteItem(category_name, item_name):
             categories=categories, state=state)
 
 # Endpoint for showing item information
+
+
 @app.route('/catalog/<string:category_name>/<string:item_name>')
 def infoItem(category_name, item_name):
     category = session.query(Category).filter_by(name=category_name).one()
