@@ -64,8 +64,6 @@ def csrf_protect():
     if request.method == "POST" and (request.endpoint != 'gconnect'):
         token = state
         # Forbidden action if there is not code or it is fake
-        print(token)
-        print(request.form.get('_csrf_token'))
         if not token or token != request.form.get('_csrf_token'):
             abort(403)
 
@@ -93,9 +91,7 @@ def gconnect():
         # Upgrade the authorized code into a credentials object
         oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
-        print(oauth_flow.redirect_uri)
         credentials = oauth_flow.step2_exchange(code)
-        print(credentials)
 
     except FlowExchangeError:
         response = make_response(
@@ -105,7 +101,6 @@ def gconnect():
         return response
     # Check that the access token is valid.
     access_token = credentials.access_token
-    print(access_token)
     url = (
         'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s' %
         access_token)
@@ -150,7 +145,6 @@ def gconnect():
     login_session['username'] = data["name"]
     login_session['picture'] = data["picture"]
     login_session['email'] = data['email']
-    print(login_session['username'])
 
     # See if user exists, if it does not make a new one
     if getUserID(login_session['email']) is None:
